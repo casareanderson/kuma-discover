@@ -1,0 +1,36 @@
+# kuma-discover config. Copy to kuma-discover.toml (or point KUMA_DISCOVER_CONFIG / --config at it).
+# Secrets never go in this file. They come from the environment:
+#   KUMA_USERNAME, KUMA_PASSWORD      always
+#   CF_API_TOKEN                      only if [cloudflare] is enabled (needs Account > Cloudflare Tunnel > Read)
+#   DISCORD_BOT_TOKEN                 only if [discord] is enabled
+
+[kuma]
+url = "http://127.0.0.1:3001"
+notification_ids = []        # Kuma notification ids new monitors alert to, e.g. [1]
+interval = 60                # seconds between checks for new monitors
+
+[scan]
+max_new = 6                  # proposals per run; the rest wait for the next run
+skip_containers = ["uptime-kuma"]   # Kuma watching itself proves nothing
+expiry_days = 14             # Discord mode: unanswered proposals expire after this
+state_dir = "~/.local/state/kuma-discover"
+
+# One block per Docker host. ssh = "local" runs docker on this machine.
+[[docker_hosts]]
+name = "nas"
+ssh = "you@192.0.2.10"
+address = "192.0.2.10"       # what the new monitors point at
+
+# Optional: Proxmox nodes. Running LXC containers with an IP get a ping monitor.
+# [[proxmox_nodes]]
+# ssh = "root@192.0.2.20"
+# ip_prefix = "192.0.2."     # only CTs whose IP starts with this
+
+[cloudflare]
+enabled = false
+account_id = ""
+
+[discord]
+enabled = false
+channel_id = ""
+owner_id = ""                # only this user's reactions count

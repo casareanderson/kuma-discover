@@ -1,0 +1,8 @@
+kuma-discover.toml
+.env
+__pycache__/
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/

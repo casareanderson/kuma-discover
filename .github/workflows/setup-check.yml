@@ -1,0 +1,35 @@
+name: setup-check
+# Proves docs/SETUP.md still works against real Uptime Kuma 1.x and 2.x containers.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * 1"
+  push:
+    paths:
+      - "docs/SETUP.md"
+      - "scripts/setup-check.sh"
+      - "kuma_discover/**"
+      - "config.example.toml"
+      - "pyproject.toml"
+      - ".github/workflows/setup-check.yml"
+jobs:
+  setup-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        kuma: ["louislam/uptime-kuma:1.23.16", "louislam/uptime-kuma:2.5.6-slim"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: bash scripts/setup-check.sh
+        env:
+          KUMA_IMAGE: ${{ matrix.kuma }}
+          TRANSCRIPT: transcript.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: transcript-${{ strategy.job-index }}
+          path: transcript.txt
