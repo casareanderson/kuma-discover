@@ -5,11 +5,12 @@ import pytest
 
 from kuma_discover import cli, core
 
-DOCKER_PS = ("web|0.0.0.0:8080->80/tcp, [::]:8080->80/tcp\n"
-             "db|127.0.0.1:5432->5432/tcp\n"
-             "uptime-kuma|0.0.0.0:3001->3001/tcp\n"
-             "photos|0.0.0.0:2283->2283/tcp\n"
-             "worker|\n")
+DOCKER_PS = ("web|nginx:alpine|0.0.0.0:8080->80/tcp, [::]:8080->80/tcp\n"
+             "db|postgres:16|127.0.0.1:5432->5432/tcp\n"
+             "uptime-kuma|louislam/uptime-kuma:2|0.0.0.0:3001->3001/tcp\n"
+             "monitoring|louislam/uptime-kuma:1.23.16|0.0.0.0:3002->3001/tcp\n"
+             "photos|ghcr.io/immich-app/immich-server:release|0.0.0.0:2283->2283/tcp\n"
+             "worker|busybox|\n")
 PROXMOX = "101|dns|running|192.0.2.53\n102|old|stopped|-\n103|vpn|running|198.51.100.7\n"
 
 
