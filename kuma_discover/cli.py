@@ -22,7 +22,7 @@ from .core import log, now
 
 DEFAULTS = {
     "kuma": {"url": "http://127.0.0.1:3001", "notification_ids": [], "interval": 60},
-    "scan": {"max_new": 6, "skip_containers": ["uptime-kuma"], "expiry_days": 14,
+    "scan": {"max_new": 6, "skip_containers": ["uptime-kuma"], "skip_images": ["louislam/uptime-kuma"], "expiry_days": 14,
              "state_dir": "~/.local/state/kuma-discover"},
     "docker_hosts": [], "proxmox_nodes": [],
     "cloudflare": {"enabled": False, "account_id": ""},
@@ -70,7 +70,7 @@ def discover(cfg) -> tuple[list[dict], list[dict]]:
     skip = set(cfg["scan"]["skip_containers"])
     items: list[dict] = []
     for h in cfg["docker_hosts"]:
-        items += core.discover_docker(h, skip)
+        items += core.discover_docker(h, skip, tuple(cfg["scan"]["skip_images"]))
     for n in cfg["proxmox_nodes"]:
         items += core.discover_proxmox(n)
     tunnel: list[dict] = []

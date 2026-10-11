@@ -24,7 +24,7 @@ No `pipx`? `python3 -m venv ~/.venvs/kuma-discover && ~/.venvs/kuma-discover/bin
 This must print container names and ports, and must **not** ask for a password:
 
 ```bash
-ssh -o BatchMode=yes you@your-docker-host docker ps --format '{{.Names}}|{{.Ports}}'
+ssh -o BatchMode=yes you@your-docker-host docker ps --format '{{.Names}}|{{.Image}}|{{.Ports}}'
 ```
 
 If it asks for a password, set up a key first: `ssh-keygen -t ed25519` then `ssh-copy-id you@your-docker-host`.
@@ -72,7 +72,7 @@ You get one `DRY` line per service Kuma isn't watching, for example:
 DRY Kuma isn't watching: nas container immich -> proposed Svc: immich (nas) (TCP port your-docker-host:2283)
 ```
 
-Only containers with a port **published on all interfaces** count. Something bound to `127.0.0.1` isn't reachable from Kuma, so it's skipped. So is the `uptime-kuma` container itself, because Kuma watching itself proves nothing.
+Only containers with a port **published on all interfaces** count. Something bound to `127.0.0.1` isn't reachable from Kuma, so it's skipped. So is Kuma itself, whatever its container is called, because Kuma watching itself proves nothing. It's matched by image (`louislam/uptime-kuma`, set by `skip_images`).
 
 ## 6. Propose, then approve ✅
 

@@ -66,9 +66,10 @@ def fake_ssh(monkeypatch):
 
 
 def test_docker_discovery_published_tcp_only(fake_ssh):
-    items = core.discover_docker({"name": "nas", "ssh": "you@192.0.2.10", "address": "192.0.2.10"}, {"uptime-kuma"})
+    items = core.discover_docker({"name": "nas", "ssh": "you@192.0.2.10", "address": "192.0.2.10"}, {"uptime-kuma"},
+                                 ("louislam/uptime-kuma",))
     names = {i["name"]: i for i in items}
-    assert set(names) == {"web", "photos"}               # db is loopback-only, worker has no port, kuma skipped
+    assert set(names) == {"web", "photos"}   # db loopback-only, worker no port, kuma skipped by name AND by image
     assert names["web"]["ports"] == [8080] and names["web"]["monitor"]["type"] == "port"
     assert fake_ssh[0][0][-2] == "you@192.0.2.10"
 

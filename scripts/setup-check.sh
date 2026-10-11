@@ -63,7 +63,7 @@ say "dry run (step 5)"
 out=$(show kuma-discover scan --dry-run)
 echo "$out" | grep -q "proposed Svc: demo-web (lab)" || fail "dry run did not propose demo-web"
 echo "$out" | grep -q "demo-local" && fail "loopback-only container was proposed"
-echo "$out" | grep -q "uptime-kuma\|kuma " && fail "kuma itself was proposed"
+echo "$out" | grep -q "Svc: kuma " && fail "kuma itself was proposed (CI names it 'kuma'; it must be skipped by image)"
 [ ! -s ~/.local/state/kuma-discover/ledger.json ] || grep -q '"items": {}' ~/.local/state/kuma-discover/ledger.json \
   || fail "dry run wrote proposals"
 

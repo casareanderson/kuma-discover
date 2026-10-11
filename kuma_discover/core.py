@@ -53,20 +53,22 @@ def _run(argv: list[str], timeout: int, stdin: str | None = None) -> subprocess.
 
 
 # ── sources ───────────────────────────────────────────────────────────────────────────────────────────
-def discover_docker(host: dict, skip: set[str]) -> list[dict]:
-    """host = {name, ssh ('local' = run docker here), address}. Containers with a host-published TCP port."""
+def discover_docker(host: dict, skip: set[str], skip_images: tuple[str, ...] = ()) -> list[dict]:
+    """host = {name, ssh ('local' = run docker here), address}. Containers with a host-published TCP port.
+    Skipped: names in skip, and images starting with any of skip_images (e.g. Kuma itself, whatever it's called)."""
     label, address = host.get("name") or host["address"], host["address"]
-    cmd = ["docker", "ps", "--format", "{{.Names}}|{{.Ports}}"]
-    argv = cmd if host.get("ssh", "local") == "local" else SSH + [host["ssh"], " ".join(
-        ["docker", "ps", "--format", "'{{.Names}}|{{.Ports}}'"])]
+    fmt = "{{.Names}}|{{.Image}}|{{.Ports}}"
+    argv = ["docker", "ps", "--format", fmt] if host.get("ssh", "local") == "local" else SSH + [
+        host["ssh"], f"docker ps --format '{fmt}'"]
     p = _run(argv, 60)
     if p is None or p.returncode != 0:
         log(f"docker {label}: {'timed out' if p is None else p.stderr.strip()[:120]} — skipped")
         return []
     out = []
     for row in p.stdout.splitlines():
-        name, _, ports = row.partition("|")
-        if not name or name in skip:
+        name, _, rest = row.partition("|")
+        image, _, ports = rest.partition("|")
+        if not name or name in skip or (skip_images and image.startswith(tuple(skip_images))):
             continue
         hp = sorted({int(m.group(2)) for m in PORT_RE.finditer(ports)})   # loopback-bound ports are ignored
         if hp:

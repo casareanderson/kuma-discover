@@ -20,7 +20,7 @@ Finds the services Uptime Kuma isn't watching on your Docker hosts (and optional
 
 ## What it does
 
-- **Finds Docker containers with published ports** on any number of hosts over SSH (or locally), skipping loopback-only ports and Kuma itself.
+- **Finds Docker containers with published ports** on any number of hosts over SSH (or locally), skipping loopback-only ports and Kuma itself (matched by image, so it works whatever you named the container).
 - **Optionally finds Proxmox LXC containers** (ping monitors) and **Cloudflare Tunnel public hostnames** (HTTPS monitors), read-only.
 - **Works out what's already covered**: same IP, same host and port, same hostname, a monitored tunnel hostname in front of the container, or a monitor with the same name.
 - **Asks before adding anything**, either at the terminal (`review`, `approve`, `reject`) or with ✅ / ❌ reactions in a Discord channel, where only the owner's reaction counts.
@@ -66,6 +66,7 @@ A TOML file (`--config`, `$KUMA_DISCOVER_CONFIG`, or `./kuma-discover.toml`); th
 | `[kuma] interval` | `60` | Check interval (seconds) for new monitors |
 | `[scan] max_new` | `6` | Proposals per run; the rest wait |
 | `[scan] skip_containers` | `["uptime-kuma"]` | Container names never proposed |
+| `[scan] skip_images` | `["louislam/uptime-kuma"]` | Image prefixes never proposed (Kuma itself, whatever it's called) |
 | `[scan] expiry_days` | `14` | Discord proposals expire after this |
 | `[scan] state_dir` | `~/.local/state/kuma-discover` | Where the decision ledger lives |
 | `[[docker_hosts]]` | none | `name`, `ssh` (`user@host` or `local`), `address` |

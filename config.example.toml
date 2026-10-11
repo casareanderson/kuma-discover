@@ -11,7 +11,8 @@ interval = 60                # seconds between checks for new monitors
 
 [scan]
 max_new = 6                  # proposals per run; the rest wait for the next run
-skip_containers = ["uptime-kuma"]   # Kuma watching itself proves nothing
+skip_containers = ["uptime-kuma"]   # container names never proposed
+skip_images = ["louislam/uptime-kuma"]   # image prefixes never proposed: Kuma watching itself proves nothing
 expiry_days = 14             # Discord mode: unanswered proposals expire after this
 state_dir = "~/.local/state/kuma-discover"
 
