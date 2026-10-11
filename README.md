@@ -6,7 +6,7 @@ Finds the services Uptime Kuma isn't watching on your Docker hosts (and optional
 
 *Real output from the CI setup check: a real Uptime Kuma 2.5.6 container and real nginx containers on a GitHub runner.*
 
-![MIT licence](https://img.shields.io/badge/licence-MIT-blue) ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
+![MIT licence](https://img.shields.io/badge/licence-MIT-blue) ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue) [![Buy Me a Coffee](https://raw.githubusercontent.com/casareanderson/.github/main/badges/bmc-yellow.svg)](https://buymeacoffee.com/iamc_tech)
 
 ## Contents
 
